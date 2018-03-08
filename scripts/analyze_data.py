@@ -84,28 +84,29 @@ if __name__ == '__main__':
 
     sample_rate = 256.0
 
-    with open("../eeg/motor-imagery/c3-c4-hand-extension-2018-03-06.csv",
+    with open("../eeg/motor-imagery/karl-c3-c4-hand-ext-flex-2018-03-07-round1.csv",
               "r") as \
             data_file:
         data_reader = csv.reader(data_file, delimiter=",", quotechar="|")
         id = 0
-        factor = 1.0
+        factor = 1000000.0
         for row in data_reader:
             # if id < max_id:
             time = np.append(time, [float(row[0])])
             index = np.append(index, [float(row[1])])
             c3 = np.append(c3, [float(row[2]) / factor])
             c4 = np.append(c4, [float(row[3]) / factor])
-            gesture = np.append(gesture, [float(row[10]) * 10])
+            gesture = np.append(gesture, [float(row[11])])
             id += 1
 
-    c4 = np.subtract(c4, np.full((len(c4)), c4.item(0)))
+    analyze_data = c3
+    analyze_data = np.subtract(analyze_data, np.full((len(analyze_data)), analyze_data.item(0)))
 
-    clean_c4 = bandpass(highpass(c4, sample_rate, 2), sample_rate, 2.0, 50.0)
+    cleaned_data = bandpass(highpass(analyze_data, sample_rate, 2), sample_rate, 2.0, 50.0)
 
     # mu_c3 = bandpass(clean_c3, 256.0, 7.0, 13.0)
 
-    mu_power_c4 = fill_bandpower(clean_c4, time, sample_rate)
+    mu_power = fill_bandpower(cleaned_data, time, sample_rate)
 
     # arr = np.array(time, mu_power_c3)
 
@@ -115,6 +116,5 @@ if __name__ == '__main__':
 
     # plt.plot(time, mu_power_c3, 'r--')
     # plt.plot(time, mu_c3, 'r--', time, gesture, 'b--')
-    plt.plot(time, clean_c4, 'g--', time, mu_power_c4, 'r--', time, gesture,
-             'b--')
+    plt.plot(time, cleaned_data, 'g--', time, gesture, 'b--')
     plt.show()

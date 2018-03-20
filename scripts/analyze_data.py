@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     sample_rate = 256.0
 
-    with open("../eeg/motor-imagery/2018-03-16/karl-exp1-trial1.csv",
+    with open("../eeg/motor-imagery/raw/2018-03-16/karl-exp1-trial1.csv",
     # with open("../eeg/motor-imagery/karl-c3-c4-hand-ext-flex-2018-03-10-round12.csv",
               "r") as \
             data_file:
